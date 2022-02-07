@@ -1,0 +1,108 @@
+/*
+ * Player.c
+ *
+ *  Created on: Jan 26, 2022
+ *      Author: Mikayla Kzinowek
+ */
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <signal.h>
+#include <sys/types.h>
+#include <string.h>
+#include <assert.h>
+
+#define BUFF_SIZE 20
+char buffer [BUFF_SIZE];
+
+int health_level = 1;
+int selected;
+pid_t pid_arr[100];
+pid_t child_pid;
+pid_t pid = fork();
+int counter = 0;
+
+void main(){
+
+	void sig_handler(int signum){
+		if (signal(SIGUSR1, injure) == SIG_ERR){
+			printf("this injures the player");
+			exit(0);
+		} else if (signal(SIGUSR2, healthUp) == SIG_ERR){
+			printf("this heals the player");
+			exit(0);
+		} else if (signal(SIGINT, printHealth) == SIG_ERR){
+			printf("this prints the health");
+			exit(0);
+		}
+	}
+
+	while(1){
+	printf("1.  Spawn Player");
+	printf("2.  Injure Player");
+	printf("3.  Heal Player");
+	printf("4.  List Player");
+	printf("5.  Quit");
+
+//use assert to get the user input from the command line
+	assert(fgets(buffer, BUFF_SIZE, stdin) != NULL);
+		if (buffer[strlen(buffer)-1] == '\n'){
+			buffer[strlen(buffer)-1] = '\0';
+			break;
+		}
+	}
+//turn it into a useable integer
+	int i = atoi(buffer);
+
+//compare the int to options in menu
+	if (selected == 1){
+		child_pid = fork();
+		if (0 == child_pid){
+		}
+			//child processes here
+		else {
+			pid_arr[counter] = child_pid;
+			counter ++;
+		}
+//if 2, injure the players using SIGUSR1
+	} else if (selected == 2){
+		int sizeofArray = sizeof(pid_arr);
+		for (int i = 0; i >= sizeofArray; i++){
+			kill (pid_arr[i], SIGUSR1);
+		}
+//if 3, heal the players using SIGUSR2
+	} else if (selected == 3){
+		int sizeofArray = sizeof(pid_arr);
+		for (int i = 0; i >= sizeofArray; i++){
+			kill (pid_arr[i], SIGUSR2);
+		}
+//if 4, show the health of the players with SIGINT
+	} else if (selected == 4){
+		int sizeofArray = sizeof(pid_arr);
+		for (int i = 0; i >= sizeofArray; i++){
+			kill (pid_arr[i], SIGINT);
+		}
+	} else if (selected == 5){
+
+	}
+
+}
+//heals the player
+void healthUp(int signum){
+	if (health_level >= 5){
+		exit(0);
+	} else {
+		health_level++;
+		printHealth();
+	}
+}
+//injures the player
+void injure(){
+	if (health_level == 1){
+		printf("Enemy %d Killed", getpid());
+	}
+}
+//prints their health
+void printHealth(){
+	printf("Health:%d", health_level);
+}
