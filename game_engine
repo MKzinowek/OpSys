@@ -1,0 +1,63 @@
+#include <stdio.h>
+#include <signal.h>
+#include <unistd.h>
+#include <sys/types.h>
+
+#define size 20;
+
+int gamepids[size];
+int length = sizeof(gamepids)/sizeo(int)
+int number;
+int counter;
+int selectedPid;
+
+void menu(){
+  printf("1.  Spawn player\n");
+  printf("2.  Injure player\n");
+  printf("3.  Heal player\n");
+  printf("4.  List players\n");
+  printf("5.  Quit\n");
+}
+
+void printChilds(){
+   for(int i = 0; i < length; i++){
+      printf("%d, gamepids[i]);
+   }
+}
+
+int main(){
+  while (health_level > -1){
+    menu();
+    scanf("%d, &number);
+    if(number == 1){
+      int childPid = fork();
+      if (childPid = 0){
+        gamepids[counter] = getpid();
+        counter++;
+        char *args[] = {"player", NULL);
+        execv("player", args);
+        exit(0);
+      }
+    else if (number == 2){
+       printChilds();
+       printf("Enter the PID of the player you want to injure");
+       scanf("%d", &selectedpid);
+       signal(SIGUSR2, decrease_health, selectedpid);
+    } else if (number == 3){
+      printChilds();
+      printf("Enter the PID of the player you want to heal");
+      scanf("%d", &selectedpid);
+      signal(SIGUSR1, increase_health, selectedpid);
+    } else if (number == 4){
+      for (int i = 0; i <= length; i++){
+        signal(SIGINT, print_health, gamepids[i]);
+      }
+   } else if (number == 5){
+      printf("Game Over");
+      for (int i = 0; i < length; i++){
+        signal(SIGKILL, gamepids[i]);
+      }
+  }
+  
+  return 0;
+  
