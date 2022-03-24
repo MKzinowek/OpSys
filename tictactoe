@@ -1,0 +1,136 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdbool.h>
+#include <pthread.h>
+
+struct threadInfo {
+    char** board;
+    int player;
+    bool gameOver;
+    int rowlen;
+    int collen;
+};
+
+void printBoard(char**, int);
+bool gameOver(char**, int);
+void* player1(void*);
+void* player2(void*);
+
+int main(int argc, char** argv){
+    struct threadInfo info;
+    info.currentPlayer = 1;
+    info.rowlen = 3;
+    info.collen = 3;
+    info.length = 3;
+    info.gameOver = false;
+    int lower = 0;
+    int upper = 3;
+    int xCount = 0;
+    int yCount = 0;
+
+        for(int i = 0; i < 3; i++){
+                for (int j = 0; j < 3; j++){
+                        info.board[i][j] = '*';
+                }
+        }
+
+    pthread_t id1;
+    pthread_t id2;
+
+    int err = pthread_create(&id1, NULL, player1, &info);
+
+    if (err != 0){
+        printf("Error creating pthread\n");
+        return 1;
+    }
+
+    if (pthread_detach(id1) != 0){
+        printf("Error detaching player 1\n");
+        return 1;
+    }
+
+    err = pthread_create(&id2, NULL, player2, &info);
+
+    if (err != 0){
+        printf("Error creating pthread\n");
+        return 1;
+    }
+
+    if (pthread_detach(id2) != 0){
+        printf("Error detaching player 1\n");
+        return 1;
+    }
+
+    while (1) {
+        if (gameOver(info.boardm info.length){
+            printBoard(info.board, info.length);
+            return 0;
+       }
+    }
+
+    void* player1(void* arg){
+        printf("Player 1 \n");
+
+        struct threadInfo* info = (struct threadInfo*) arg;
+        int rowMove = (rand() % (upper - lower + 1)) + lower;
+        int colMove = (rand() % (upper - lower + 1)) + lower;
+        while (!info -> currentPlayer){
+            while (info -> currentPlayer != 1){
+                sleep(2);
+            }
+            while(info -> info.board[rowMove][colMove] = '-')
+                info -> info.board[rowMove][colMove] = 'O';
+            }
+        }
+
+            info -> currentPlayer = 2;
+            printf("Player 1\n");
+            printBoard(info-> board, info -> length);
+    }
+
+    void* player2(void* arg){
+        printf("Player 2 \n");
+
+        struct threadInfo* info = (struct threadInfo*) arg;
+        int rowMove = (rand() % (upper - lower + 1)) + lower;
+        int colMove = (rand() % (upper - lower + 1)) + lower;
+                while (!info -> gameOver){
+                        while (info -> currentPlayer != 2){
+                                sleep(2);
+                }
+                while(info -> board[rowMove][colMove] = '-')
+                        info -> board[rowMove][colMove] = 'X';
+            }
+        }
+
+            info -> player = 1;
+            printf("Player 2\n");
+            printBoard (info -> board, info ->length);
+    }
+
+    void printBoard(char** arr, int length){
+        int i = 0;
+        int j = 0;
+        for (i = 0; i < 2; i++){
+            for (j = 0; j < 2; j++){
+                printf("%c", arr[i][j]);
+            }
+            printf("\n");
+        }
+    }
+
+    bool gameOver(char** arr, int length){
+        int a = 0;
+        int b = 0;
+        for (a = 0; a < 2; a++){
+           for (b = 0; b < 2; b++){
+               if (board[a][b] == '*'){
+                   return false;
+               }
+            }
+        }
+        exit(0);
+ //       return true;
+    }
